@@ -32,11 +32,12 @@ FOOD_N = 5
 INIT_SNAKE_LEN = 10
 
 class Snake:
-    def __init__(self, size, parent_window):
+    def __init__(self, parent_window):
         self.score = 0
         self.parent_win = parent_window
         self.setup_curses()
-        self.pts = deque((MINY // 2, i) for i in range(1, size + 1))  # (y, x)
+        # pts as deque of (y, x)
+        self.pts = deque((MINY // 2, i) for i in range(1, INIT_SNAKE_LEN + 1))
         self.dir = (0, 1)
         self.render()
         # True if food; False if part of snake
@@ -159,7 +160,7 @@ class Snake:
 
 
 def main(stdscr):
-    snake = Snake(INIT_SNAKE_LEN, stdscr)
+    snake = Snake(stdscr)
     snake.play()
 
 if __name__ == '__main__':
