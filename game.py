@@ -9,6 +9,8 @@ from collections import deque
 CH_FULL_BLK = '█'
 CH_FOOD = '●'
 CH_SPACE = ' '
+
+CH_PAUSE = ord(' ')
 CH_q = ord('q')  # quit
 MV_RIGHT = {ord('l'), curses.KEY_RIGHT}
 MV_LEFT = {ord('h'), curses.KEY_LEFT}
@@ -119,6 +121,12 @@ class Snake:
         self.parent_win.getch()
         return False
 
+    def pause(self):
+        self.parent_win.nodelay(False)
+        while self.parent_win.getch() != CH_PAUSE:
+            pass
+        self.parent_win.nodelay(True)
+
     def play(self):
         playing = True
         level = 0
@@ -127,9 +135,10 @@ class Snake:
         while playing:
             if self.score >= req_score:
                 level += 1
-                if level == len(LEV_SCORE):
+                if level + 1 == len(LEV_SCORE):
                     self.end_game()
                 req_score = LEV_SCORE[level + 1]
+                delay = LEV_DELAY[level]
             time.sleep(delay)
             kp = self.parent_win.getch()  # get key pressed
             if kp == -1:
@@ -142,6 +151,8 @@ class Snake:
                 playing = self.move((1, 0))
             elif kp in MV_UP:
                 playing = self.move((-1, 0))
+            elif kp == CH_PAUSE:
+                self.pause()
             elif kp == CH_q:
                 playing = self.end_game()
 
