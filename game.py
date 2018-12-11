@@ -17,8 +17,10 @@ MV_UP = {ord('k'), curses.KEY_UP}
 
 MINX, MINY = 80, 31
 
-LEV_DELAY = [0.20, 0.15, 0.12, 0.10, 0.08, 0.06, 0.05, 0.03]
+LEV_DELAY = [0.19, 0.15, 0.12, 0.10, 0.08, 0.06, 0.05, 0.03]
 LEV_SCORE = [10, 20, 30, 40, 50, 60, 70, 80]
+FOOD_N = 5
+INIT_SNAKE_LEN = 10
 
 class Snake:
     def __init__(self, size, parent_window):
@@ -30,7 +32,7 @@ class Snake:
         self.render()
         # True if food; False if part of snake
         self.food = {p: False for p in self.pts}
-        self.add_food(4)
+        self.add_food(FOOD_N)
 
     def setup_curses(self):
         curses.curs_set(0)
@@ -85,8 +87,8 @@ class Snake:
         # check if eating food
         eating_food = self.food.get(new_pt)
         if eating_food is True:
-            self.food.pop(new_pt)
             self.add_food(1)
+            self.food.pop(new_pt)
             self.update_score(1)
             ate = True
         elif eating_food is False:
@@ -145,7 +147,7 @@ class Snake:
 
 
 def main(stdscr):
-    snake = Snake(10, stdscr)
+    snake = Snake(INIT_SNAKE_LEN, stdscr)
     snake.play()
 
 if __name__ == '__main__':
